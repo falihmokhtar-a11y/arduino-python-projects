@@ -1,0 +1,46 @@
+int T = 300;
+int ledPin = 8;
+
+void dot(){ //function(.)
+  digitalWrite(ledPin, HIGH);
+  delay(T);
+  digitalWrite(ledPin, LOW);
+  delay(T); // pause nach jeder buchstaben
+}
+void dash(){ //function(-)
+  digitalWrite(ledPin, HIGH);
+  delay(3 * T);
+  digitalWrite(ledPin, LOW);
+  delay(T);
+}
+
+void letterGap(){
+  delay(2 * T);
+}
+
+void wordGap(){
+  delay(6 * T);
+}
+
+void playMorse(const char* code) {
+  for (int i = 0; code[i] != '\0'; i++) {
+    char c = code[i];
+
+    if (c == '.') dot();
+    else if (c == '-') dash();
+    else if (c == ' ') letterGap();
+    else if (c == '/') wordGap();
+  }
+}
+
+void setup() { // online one time by starten
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(115200); //tell arduino 8 = the output, wir schicken strom dadurch
+}
+
+void loop() {
+  if (Serial.available()) {
+    String morse = Serial.readStringUntil('\n');
+    playMorse(morse.c_str());
+  }
+}
